@@ -6,7 +6,7 @@ services:
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python main.py"
     regions:
-      - oregon
+      - singapore
     envVars:
       - key: FLASK_ENV
         value: production
