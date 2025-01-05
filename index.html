@@ -1,17 +1,56 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invidious APIで動画検索</title>
+    <title>YouTube Search with Invidious</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        input[type="text"] { width: 300px; padding: 5px; }
+        button { padding: 5px 10px; }
+        .video { margin-bottom: 20px; }
+    </style>
 </head>
 <body>
-    <h1>Invidious APIを使った動画検索</h1>
-    <input type="text" id="searchQuery" placeholder="検索キーワード">
-    <button onclick="searchVideos()">検索</button>
+    <h1>YouTube Search with Invidious</h1>
+    <input type="text" id="searchQuery" placeholder="Search for videos">
+    <button onclick="searchVideos()">Search</button>
 
-    <div id="videoResults"></div>
+    <div id="videos"></div>
 
-    <script src="script.js"></script>
+    <script>
+        function searchVideos() {
+            const query = document.getElementById('searchQuery').value;
+            fetch(`/search?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        displayVideos(data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        }
+
+        function displayVideos(videos) {
+            const videoContainer = document.getElementById('videos');
+            videoContainer.innerHTML = '';
+
+            videos.forEach(video => {
+                const videoElement = document.createElement('div');
+                videoElement.classList.add('video');
+                videoElement.innerHTML = `
+                    <h3>${video.title}</h3>
+                    <p>By: ${video.author}</p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
+                    <br><a href="https://inv.nadeko.net/watch?v=${video.videoId}" target="_blank">Watch on Invidious</a>
+                `;
+                videoContainer.appendChild(videoElement);
+            });
+        }
+    </script>
 </body>
 </html>
