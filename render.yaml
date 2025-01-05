@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: invidious-search-app
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python main.py"
+    regions:
+      - oregon
+    envVars:
+      - key: FLASK_ENV
+        value: production
